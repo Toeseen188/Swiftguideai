@@ -1,0 +1,37 @@
+{
+  "name": "swiftguide",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SwiftGuide — AI-powered emergency evacuation assistant for regular citizens during disasters.",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run server & npm run start",
+    "server": "nodemon api/server.js",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{js,jsx}\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@mapbox/mapbox-gl-geocoder": "^5.0.2",
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mapbox-gl": "^3.5.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/mapbox-gl": "^3.4.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.12.0",
+    "eslint-plugin-react": "^7.37.2",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vite": "^6.0.0"
+  }
+}
