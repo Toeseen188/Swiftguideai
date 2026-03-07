@@ -46,11 +46,12 @@ router.post('/generate-route', async (req, res) => {
       const waypoints = [
         { lat: safeLat, lng: safeLng },
         {
-          lat: (safeLat + shelter.lat) / 2 + 0.01 * (idx - 1),
-          lng: (safeLng + shelter.lng) / 2
-        },
-        { lat: shelter.lat, lng: shelter.lng }
-      ];
+            lat: safeLat + (shelter.lat - safeLat) * 0.33 + 0.005 * (idx - 1),
+            lng: safeLng + (shelter.lng - safeLng) * 0.33
+          },
+          {
+            lat: safeLat + (shelter.lat - safeLat) * 0.66 + 0.005 * (idx - 1),
+            lng: safeLng + (shelter.lng - safeLng) * 0.66
 
       return {
         route_name:
