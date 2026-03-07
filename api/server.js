@@ -5,6 +5,11 @@ import generateRouteRouter from './generateRoute.js';
 
 dotenv.config();
 
+console.log('[SwiftRoute] USE_REAL_DATA =', 
+  process.env.USE_REAL_DATA);
+console.log('[SwiftRoute] ANTHROPIC_KEY loaded =', 
+  !!process.env.ANTHROPIC_API_KEY);
+
 const app = express();
 
 app.use(cors());

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #root {
@@ -10,6 +14,30 @@ body,
 
 body {
   @apply bg-background text-text font-sans;
+}
+
+/* Leaflet z-index fixes */
+.leaflet-container {
+  z-index: 0 !important;
+}
+
+.leaflet-pane {
+  z-index: 0 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1 !important;
+}
+
+/* Map container must have height */
+.map-wrapper {
+  height: 400px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 
 .screen-enter {

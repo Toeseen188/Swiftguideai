@@ -1,53 +1,63 @@
 import React, { useState } from 'react';
 
-function ShareButton({ route, coords }) {
+function ShareButton({ route }) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
-    const text = [
-      `I'm evacuating via ${route.route_name || 'the safest route'}.`,
-      `Estimated arrival at shelter: ~${route.estimated_minutes} minutes.`,
-      `Shelter: ${route.shelter?.name || ''} ${route.shelter?.address ? `(${route.shelter.address})` : ''}`.trim(),
-      coords
-        ? `Track: https://maps.google.com/?q=${coords.lat.toFixed(
-            5
-          )},${coords.lng.toFixed(5)}`
-        : ''
-    ]
-      .filter(Boolean)
-      .join('\n');
+  const handleShare = () => {
+    if (!route) return;
+    const text = 
+`🛣️ SwiftRoute Emergency Evacuation
+━━━━━━━━━━━━━━━━━━
+Route: ${route.route_name}
+Safety score: ${route.safety_score}/10
+Est. time: ~${route.estimated_minutes} mins
+Destination: ${route.shelter?.name}
 
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
+Directions:
+${(route.steps || []).slice(0,4).map((s,i) => `${i+1}. ${s}`).join('\n')}
+
+Stay safe. SwiftRoute.`;
+
+    navigator.clipboard?.writeText(text).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy route', err);
-    }
+      setTimeout(() => setCopied(false), 3000);
+    });
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className="mt-1 w-full h-11 rounded-xl bg-accent text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-md shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-accent"
-    >
-      <span>Share My Route</span>
-      <span className="text-sm">🔗</span>
-      {copied && <span className="text-[11px] text-emerald-50">Copied</span>}
-    </button>
+    <div style={{
+      position: 'fixed',
+      bottom: 0, left: '50%',
+      transform: 'translateX(-50%)',
+      width: '100%',
+      maxWidth: '480px',
+      padding: '16px',
+      background: 'rgba(240,244,248,0.95)',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+      borderTop: '1px solid #e2e8f0',
+      zIndex: 200,
+    }}>
+      <button onClick={handleShare}
+        style={{
+          width: '100%',
+          padding: '15px',
+          background: copied
+            ? '#16a34a'
+            : 'linear-gradient(135deg, #0A3D2B, #22c55e)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '10px',
+          fontSize: '1rem',
+          fontWeight: 800,
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          letterSpacing: '0.01em',
+          boxShadow: '0 4px 16px rgba(10,61,43,0.3)',
+        }}>
+        {copied ? '✅ Copied to clipboard!' : '📤 Share Route'}
+      </button>
+    </div>
   );
 }
 

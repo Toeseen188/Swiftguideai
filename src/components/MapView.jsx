@@ -1,174 +1,203 @@
-import React, { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  Circle,
+  useMap,
+} from 'react-leaflet';
+import L from 'leaflet';
 
-const ROUTE_COLORS = ['#22C55E', '#F59E0B', '#EF4444'];
+// Fix Leaflet broken marker icons in React/Webpack
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl:
+    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 
-function MapView({
-  userCoords,
+// Custom colored icons
+const makeIcon = (color) =>
+  new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+    shadowUrl:
+      'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+  });
+
+const blueIcon = makeIcon('blue');
+const greenIcon = makeIcon('green');
+
+// Route line colors
+const ROUTE_COLORS = {
+  0: '#16a34a', // green — safest
+  1: '#d97706', // amber — moderate
+  2: '#dc2626', // red   — least safe
+};
+
+// Flies map camera to user location
+function FlyToLocation({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, 13, { duration: 1.5 });
+    }
+  }, [center, map]);
+  return null;
+}
+
+export default function MapView({
+  userLocation,
   routes,
   shelters,
   dangerZone,
-  selectedRouteIndex,
-  onMapError
+  selectedRoute,
+  sirens = [],
+  emergencyStations = [],
+  pharmacies = [],
 }) {
-  const containerRef = useRef(null);
-  const mapRef = useRef(null);
+  const defaultCenter = userLocation
+    ? [userLocation.lat, userLocation.lng]
+    : [32.3668, -86.2999];  // Montgomery, AL
 
-  useEffect(() => {
-    const token = import.meta.env.VITE_MAPBOX_TOKEN;
+  return (
+    <div className="map-wrapper">
+      <MapContainer
+        center={defaultCenter}
+        zoom={13}
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={false}
+      >
+        {/* OpenStreetMap — completely free, no token */}
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        />
 
-    if (!token) {
-      console.warn('Mapbox token missing');
-      onMapError?.();
-      return;
-    }
+        {/* Fly camera to user when location changes */}
+        {userLocation && (
+          <FlyToLocation
+            center={[userLocation.lat, userLocation.lng]}
+          />
+        )}
 
-    mapboxgl.accessToken = token;
+        {/* User location — blue marker */}
+        {userLocation && (
+          <Marker
+            position={[userLocation.lat, userLocation.lng]}
+            icon={blueIcon}
+          >
+            <Popup>📍 Your Location</Popup>
+          </Marker>
+        )}
 
-    try {
-      const map = new mapboxgl.Map({
-        container: containerRef.current,
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [userCoords?.lng || 3.3792, userCoords?.lat || 6.5244],
-        zoom: 12
-      });
-      mapRef.current = map;
+        {/* Danger zone — red shaded circle */}
+        {dangerZone?.center && (
+          <Circle
+            center={[
+              dangerZone.center.lat,
+              dangerZone.center.lng,
+            ]}
+            radius={(dangerZone.radiusKm || 2) * 1000}
+            pathOptions={{
+              color: '#dc2626',
+              fillColor: '#dc2626',
+              fillOpacity: 0.12,
+              weight: 2,
+              dashArray: '6 4',
+            }}
+          >
+            <Popup>⚠️ Active Danger Zone</Popup>
+          </Circle>
+        )}
 
-      map.addControl(new mapboxgl.NavigationControl({ visualizePitch: false }), 'top-right');
-
-      map.on('load', () => {
-        if (userCoords) {
-          new mapboxgl.Marker({
-            color: '#0EA5E9'
-          })
-            .setLngLat([userCoords.lng, userCoords.lat])
-            .addTo(map);
-        }
-
-        if (dangerZone?.center && dangerZone.radiusKm) {
-          map.addSource('danger-zone', {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: [dangerZone.center.lng, dangerZone.center.lat]
-              }
-            }
-          });
-
-          map.addLayer({
-            id: 'danger-zone-fill',
-            type: 'circle',
-            source: 'danger-zone',
-            paint: {
-              'circle-radius': dangerZone.radiusKm * 80,
-              'circle-color': '#EF4444',
-              'circle-opacity': 0.15
-            }
-          });
-        }
-
-        shelters?.forEach((shelter, index) => {
-          const el = document.createElement('div');
-          el.className =
-            'bg-white rounded-full shadow-md border border-emerald-500 text-xs px-2 py-[2px]';
-          el.innerText = '⛺';
-
-          setTimeout(() => {
-            new mapboxgl.Marker(el)
-              .setLngLat([shelter.lng, shelter.lat])
-              .setPopup(
-                new mapboxgl.Popup({ offset: 12 }).setHTML(
-                  `<strong>${shelter.name}</strong><br/><span style="font-size:11px">${shelter.address}</span>`
-                )
-              )
-              .addTo(map);
-          }, 200 * index);
-        });
-
-        routes?.forEach((route, index) => {
-          const id = `route-${index}`;
-          const coordinates =
-            route.waypoints?.map((wp) => [wp.lng, wp.lat]) || [];
-
-          map.addSource(id, {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates
-              }
-            }
-          });
-
-          map.addLayer({
-            id,
-            type: 'line',
-            source: id,
-            layout: {
-              'line-cap': 'round',
-              'line-join': 'round'
-            },
-            paint: {
-              'line-color': ROUTE_COLORS[index] || '#0F172A',
-              'line-width': 4,
-              'line-opacity': index === selectedRouteIndex ? 0.95 : 0.35
-            }
-          });
-
-          let progress = 0;
-          const animate = () => {
-            progress += 0.03;
-            if (progress > 1) {
-              map.setPaintProperty(id, 'line-opacity', index === selectedRouteIndex ? 0.95 : 0.4);
-              return;
-            }
-            map.setPaintProperty(id, 'line-opacity', Math.max(progress, 0.2));
-            requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
-        });
-
-        const allCoords = [];
-        routes?.forEach((route) => {
-          route.waypoints?.forEach((wp) => {
-            allCoords.push([wp.lng, wp.lat]);
-          });
-        });
-        if (userCoords) {
-          allCoords.push([userCoords.lng, userCoords.lat]);
-        }
-        if (allCoords.length > 1) {
-          const bounds = allCoords.reduce(
-            (b, coord) => b.extend(coord),
-            new mapboxgl.LngLatBounds(allCoords[0], allCoords[0])
+        {/* Evacuation route lines */}
+        {routes?.map((route, index) => {
+          if (!route?.waypoints?.length) return null;
+          const isSelected = selectedRoute === index;
+          const positions = route.waypoints.map(
+            (wp) => [wp.lat, wp.lng]
           );
-          map.fitBounds(bounds, { padding: 40, maxZoom: 14 });
-        }
-      });
+          return (
+            <Polyline
+              key={index}
+              positions={positions}
+              pathOptions={{
+                color: ROUTE_COLORS[index],
+                weight: isSelected ? 7 : 3,
+                opacity: isSelected ? 1 : 0.55,
+                dashArray: index === 2 ? '8 5' : null,
+              }}
+            >
+              <Popup>
+                🛣️ <strong>{route.route_name}</strong>
+                <br />
+                Safety: {route.safety_score}/10
+                <br />~{route.estimated_minutes} mins ·{' '}
+                {route.distance_km} km
+              </Popup>
+            </Polyline>
+          );
+        })}
 
-      map.on('error', (e) => {
-        console.error('Mapbox error', e);
-        onMapError?.();
-      });
-    } catch (error) {
-      console.error('Failed to load map', error);
-      onMapError?.();
-    }
+        {/* Shelter markers — green */}
+        {shelters?.map((shelter, index) => (
+          <Marker
+            key={`shelter-${index}`}
+            position={[shelter.lat, shelter.lng]}
+            icon={greenIcon}
+          >
+            <Popup>
+              🏕️ <strong>{shelter.name}</strong>
+              <br />
+              {shelter.address}
+              <br />
+              Available: {shelter.available}/{shelter.capacity}
+            </Popup>
+          </Marker>
+        ))}
 
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
-    };
-  }, [userCoords, routes, shelters, dangerZone, selectedRouteIndex, onMapError]);
+        {/* Emergency stations — blue */}
+        {emergencyStations.map((st, idx) => (
+          <Marker
+            key={`station-${idx}`}
+            position={[st.lat, st.lng]}
+            icon={blueIcon}
+          >
+            <Popup>🚓 <strong>{st.name || st.site_name}</strong></Popup>
+          </Marker>
+        ))}
 
-  return <div ref={containerRef} className="w-full h-full" />;
+        {/* Sirens — red icon */}
+        {sirens.map((s, idx) => (
+          <Marker
+            key={`siren-${idx}`}
+            position={[s.lat, s.lng]}
+            icon={makeIcon('red')}
+          >
+            <Popup>🔊 Siren</Popup>
+          </Marker>
+        ))}
+
+        {/* Pharmacies — violet icon */}
+        {pharmacies.map((p, idx) => (
+          <Marker
+            key={`pharmacy-${idx}`}
+            position={[p.lat, p.lng]}
+            icon={makeIcon('violet')}
+          >
+            <Popup>💊 <strong>{p.name || p.site_name}</strong></Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
+  );
 }
-
-export default MapView;
 

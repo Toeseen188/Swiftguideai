@@ -1,5 +1,6 @@
 import express from 'express';
 import { getMockDisasterData } from './mockData.js';
+import { getDisasterData } from './dataService.js';
 
 const router = express.Router();
 
@@ -14,10 +15,10 @@ router.post('/generate-route', async (req, res) => {
   const type = String(disasterType || 'flood').toLowerCase();
 
   try {
-    const mockData = getMockDisasterData(safeLat, safeLng, type);
+    const disasterData = await getDisasterData(safeLat, safeLng, type, location);
 
-    // Local AI-style mocked routes for reliable MVP behavior
-    const baseShelters = mockData.shelters.slice(0, 3);
+    // always have shelters array to sample
+    const baseShelters = (disasterData.shelters || []).slice(0, 3);
 
     const routes = baseShelters.map((shelter, idx) => {
       const safetyScores = [9, 7, 5];
@@ -79,14 +80,20 @@ router.post('/generate-route', async (req, res) => {
 
     const responsePayload = {
       routes,
-      dangerZone: {
-        center: mockData.dangerZone.center,
-        radiusKm: mockData.dangerZone.radiusKm
+      shelters: disasterData.shelters,
+      emergencyStations: disasterData.emergencyStations || [],
+      sirens: disasterData.sirens || [],
+      pharmacies: disasterData.pharmacies || [],
+      dangerZone: disasterData.dangerZone,
+      blockedRoads: disasterData.blockedRoads,
+      callStats: disasterData.callStats || [],
+      meta: {
+        dataSource: disasterData.dataSource,
+        aiEngine: 'anthropic',
+        generatedAt: new Date().toISOString(),
+        location,
+        disasterType: type,
       },
-      shelters: mockData.shelters,
-      blockedRoads: mockData.blockedRoads,
-      disasterType: type,
-      generatedAt: new Date().toISOString()
     };
 
     return res.json(responsePayload);

@@ -19,7 +19,7 @@ export async function generateRoutesWithClaude(prompt) {
     max_tokens: 1200,
     temperature: 0.4,
     system:
-      'You are SwiftGuide, a calm and precise AI emergency evacuation assistant. Your job is to generate clear, life-saving evacuation routes for citizens in distress. Always respond in simple, calm language. Never use technical jargon. A frightened person must be able to follow your instructions.',
+      'You are SwiftRoute, a calm and precise AI emergency evacuation assistant. Your job is to generate clear, life-saving evacuation routes for citizens in distress. Always respond in simple, calm language. Never use technical jargon. A frightened person must be able to follow your instructions.',
     messages: [
       {
         role: 'user',
