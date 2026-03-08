@@ -12,7 +12,16 @@ console.log('[SwiftGuide AI] ANTHROPIC_KEY loaded =',
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3004',
+    'https://swiftguide-ai.vercel.app',
+    'https://69ad67ef292be9b3c7cfbad0--swiftguide.netlify.app',
+  ],
+  methods: ['GET', 'POST'],
+}));
+
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
