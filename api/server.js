@@ -18,6 +18,7 @@ app.use(cors({
     'http://localhost:3004',
     'https://swiftguide-ai.vercel.app',
     'https://69ad67ef292be9b3c7cfbad0--swiftguide.netlify.app',
+    'https://swiftguide.netlify.app/'
     'http://localhost:5173',  // Added for Vite dev server
   ],
   methods: ['GET', 'POST'],
