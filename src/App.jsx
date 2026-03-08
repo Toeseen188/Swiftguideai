@@ -9,7 +9,7 @@ import AlertsPanel from './components/AlertsPanel.jsx';
 import ShareButton from './components/ShareButton.jsx';
 import LoadingMessage from './components/LoadingMessage.jsx';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // ════════════════════════════════════════════════════════════════
 // SCREEN COMPONENTS — Each screen is a self-contained component
