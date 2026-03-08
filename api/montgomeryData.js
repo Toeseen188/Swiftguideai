@@ -24,7 +24,7 @@ async function fetchArcGIS(url) {
   }
 }
 
-// 1. Tornado Shelters → SwiftRoute evacuation shelters
+// 1. Tornado Shelters → SwiftGuide AI evacuation shelters
 async function getTornadoShelters() {
   const features = await fetchArcGIS(
     `${BASE}/Tornado_Shelter/FeatureServer/0${Q}`
@@ -51,35 +51,95 @@ async function getTornadoShelters() {
 
 // 2. Fire & Police Stations → emergency resources
 async function getEmergencyStations() {
-  const features = await fetchArcGIS(
-    `${BASE}/Story_Map___Live__1__WFL1/FeatureServer/0${Q}`
-  );
-  return features
-    .map((f) => ({
-      name: f.attributes.NAME || 'Emergency Station',
-      address: f.attributes.ADDRESS || '',
-      lat: f.geometry?.y,
-      lng: f.geometry?.x,
-      type: f.attributes.TYPE?.toLowerCase().includes('fire')
-        ? 'fire_station'
-        : 'police_station',
-    }))
-    .filter((s) => s.lat && s.lng);
+  // Try each known layer path for this service
+  const urlsToTry = [
+    `${BASE}/Story_Map___Live__1__WFL1/FeatureServer/0${Q}`,
+    `${BASE}/Story_Map___Live__1__WFL1/FeatureServer/1${Q}`,
+    `${BASE}/Story_Map___Live__1__WFL1/FeatureServer/2${Q}`,
+    `${BASE}/Story_Map___Live__1__WFL1/MapServer/0${Q}`,
+    `${BASE}/Story_Map___Live__1__WFL1/MapServer/1${Q}`,
+  ];
+
+  for (const url of urlsToTry) {
+    try {
+      console.log('[ArcGIS] Trying stations:', url);
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.features?.length > 0) {
+        console.log(`[ArcGIS] ✅ Stations found: ${data.features.length}`);
+        return data.features.map(f => {
+          const lat = f.geometry?.y 
+                   ?? f.attributes?.Y 
+                   ?? f.attributes?.LAT 
+                   ?? null;
+          const lng = f.geometry?.x 
+                   ?? f.attributes?.X 
+                   ?? f.attributes?.LON 
+                   ?? null;
+          if (!lat || !lng) return null;
+          return {
+            name: f.attributes?.NAME 
+               || f.attributes?.STATION_NAME 
+               || 'Emergency Station',
+            address: f.attributes?.ADDRESS 
+                  || f.attributes?.FULLADDR 
+                  || 'Montgomery, AL',
+            lat, lng,
+            type: String(f.attributes?.TYPE || '')
+              .toLowerCase().includes('fire')
+              ? 'fire_station' : 'police_station',
+          };
+        }).filter(Boolean);
+      }
+    } catch (err) {
+      console.log('[ArcGIS] URL failed:', err.message);
+    }
+  }
+  console.warn('[ArcGIS] ⚠️ Stations: all URLs failed, returning []');
+  return [];
 }
 
 // 3. Weather Sirens → warning infrastructure
 async function getWeatherSirens() {
-  const features = await fetchArcGIS(
-    `${BASE}/Weather_Sirens/FeatureServer/0${Q}`
-  );
-  return features
-    .map((f) => ({
-      name: f.attributes.NAME || 'Weather Siren',
-      lat: f.geometry?.y,
-      lng: f.geometry?.x,
-      type: 'siren',
-    }))
-    .filter((s) => s.lat && s.lng);
+  const urlsToTry = [
+    `${BASE}/Weather_Sirens/FeatureServer/0${Q}`,
+    `${BASE}/Weather_Sirens/FeatureServer/1${Q}`,
+    `${BASE}/Weather_Sirens/MapServer/0${Q}`,
+    `${BASE}/Weather_Sirens/MapServer/1${Q}`,
+  ];
+
+  for (const url of urlsToTry) {
+    try {
+      console.log('[ArcGIS] Trying sirens:', url);
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.features?.length > 0) {
+        console.log(`[ArcGIS] ✅ Sirens found: ${data.features.length}`);
+        return data.features.map(f => {
+          const lat = f.geometry?.y 
+                   ?? f.attributes?.Y 
+                   ?? f.attributes?.LAT 
+                   ?? null;
+          const lng = f.geometry?.x 
+                   ?? f.attributes?.X 
+                   ?? f.attributes?.LON 
+                   ?? null;
+          if (!lat || !lng) return null;
+          return {
+            name: f.attributes?.NAME 
+               || f.attributes?.SIREN_ID 
+               || 'Weather Siren',
+            lat, lng,
+            type: 'siren',
+          };
+        }).filter(Boolean);
+      }
+    } catch (err) {
+      console.log('[ArcGIS] URL failed:', err.message);
+    }
+  }
+  console.warn('[ArcGIS] ⚠️ Sirens: all URLs failed, returning []');
+  return [];
 }
 
 // 4. Pharmacies → medical aid during disaster

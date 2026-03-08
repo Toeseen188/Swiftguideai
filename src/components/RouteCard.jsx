@@ -20,7 +20,7 @@ function RouteCard({ route, index, isSelected, onSelect }) {
         boxShadow: isSelected
           ? `0 4px 16px ${color}40`
           : '0 1px 3px rgba(0,0,0,0.08)',
-        padding: '16px',
+        padding: 'clamp(12px, 3vw, 16px)',
         marginBottom: '16px',
         borderLeft: `4px solid ${color}`,
         cursor: 'pointer',
@@ -50,7 +50,7 @@ function RouteCard({ route, index, isSelected, onSelect }) {
           </span>
           <h3 style={{
             margin: 0,
-            fontSize: '1rem',
+            fontSize: 'var(--text-base)',
             fontWeight: 800,
             color: '#0f172a',
             lineHeight: 1.2,
@@ -75,7 +75,7 @@ function RouteCard({ route, index, isSelected, onSelect }) {
       {/* Meta row */}
       <div style={{
         display: 'flex',
-        gap: '16px',
+        gap: '6px',
         marginBottom: '12px',
         flexWrap: 'wrap',
       }}>

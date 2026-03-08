@@ -1,8 +1,8 @@
 {
-  "name": "swiftroute",
+  "name": "swiftguide-ai",
   "version": "1.0.0",
   "private": true,
-  "description": "SwiftRoute — AI-powered emergency evacuation assistant for regular citizens during disasters.",
+  "description": "SwiftGuide AI — AI-powered emergency evacuation assistant for regular citizens during disasters.",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run start\"",

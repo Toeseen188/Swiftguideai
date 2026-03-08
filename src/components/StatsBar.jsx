@@ -17,17 +17,17 @@ export default function StatsBar({ shelters, stations, sirens, blockedRoads }) {
       {stats.map((s, i) => (
         <div key={i} style={{
           textAlign: 'center',
-          padding: '10px 4px',
+          padding: 'clamp(8px, 1.5vh, 12px) 4px',
           borderRight: i < 3
             ? '1px solid rgba(255,255,255,0.07)' : 'none',
         }}>
-          <div style={{ fontSize: '1rem', lineHeight: 1 }}>
+          <div style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)', lineHeight: 1 }}>
             {s.icon}
           </div>
           <div style={{
             color: '#22c55e',
             fontWeight: 900,
-            fontSize: '1.25rem',
+            fontSize: 'clamp(1rem, 3vw, 1.2rem)',
             lineHeight: 1.2,
             marginTop: 2,
           }}>
@@ -35,7 +35,7 @@ export default function StatsBar({ shelters, stations, sirens, blockedRoads }) {
           </div>
           <div style={{
             color: 'rgba(255,255,255,0.4)',
-            fontSize: '0.6rem',
+            fontSize: 'clamp(0.58rem, 1.5vw, 0.65rem)',
             fontWeight: 700,
             textTransform: 'uppercase',
             letterSpacing: '0.06em',

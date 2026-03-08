@@ -1,8 +1,8 @@
-# SwiftRoute 🛣️
+# SwiftGuide AI 🛣️
 
 > **AI-powered emergency evacuation assistant for regular citizens during disasters.**
 
-SwiftRoute generates personalized, real-time escape routes during floods, fires, earthquakes, and chemical emergencies — in plain English, on your phone, in seconds.
+SwiftGuide AI generates personalized, real-time escape routes during floods, fires, earthquakes, and chemical emergencies — in plain English, on your phone, in seconds.
 
 Built at the **World Wide Vibes Hackathon** by GenAI Academy · March 5–9, 2025.
 
@@ -17,13 +17,13 @@ When disaster strikes, most people face the same terrifying reality:
 - Following the crowd often leads into danger zones
 - Nobody gives *you*, at *your exact location*, an evacuation route using live city data
 
-**SwiftRoute fills that gap.**
+**SwiftGuide AI fills that gap.**
 
 ---
 
 ## What It Does
 
-1. You open SwiftRoute on your phone
+1. You open SwiftGuide AI on your phone
 2. It detects your location (or you type it in)
 3. You select your disaster type — Flood, Fire, Earthquake, or Chemical
 4. AI analyzes live disaster data, road conditions, shelter locations, and danger zones
@@ -65,8 +65,8 @@ When disaster strikes, most people face the same terrifying reality:
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/swiftroute.git
-cd swiftroute
+git clone https://github.com/your-org/swiftguide-ai.git
+cd swiftguide-ai
 
 # Install dependencies
 npm install
@@ -101,7 +101,7 @@ Frontend will be available at `http://localhost:3000` and the API is proxied aut
 ## Project Structure
 
 ```
-swiftroute/
+swiftguide-ai/
 ├── src/
 │   ├── components/
 │   │   ├── MapView.jsx

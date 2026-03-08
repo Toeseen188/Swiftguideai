@@ -6,7 +6,7 @@ function ShareButton({ route }) {
   const handleShare = () => {
     if (!route) return;
     const text = 
-`🛣️ SwiftRoute Emergency Evacuation
+`🛣️ SwiftGuide AI Emergency Evacuation
 ━━━━━━━━━━━━━━━━━━
 Route: ${route.route_name}
 Safety score: ${route.safety_score}/10
@@ -25,7 +25,7 @@ Stay safe. SwiftRoute.`;
   };
 
   return (
-    <div style={{
+    <div className="share-btn-wrapper" style={{
       position: 'fixed',
       bottom: 0, left: '50%',
       transform: 'translateX(-50%)',
