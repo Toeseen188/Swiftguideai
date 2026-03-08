@@ -1,64 +1,208 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ── Import theme ── */
+@import './styles/theme.css';
 
-* {
+/* ── Reset ── */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html,
-body,
-#root {
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
   height: 100%;
 }
 
 body {
-  @apply bg-background text-text font-sans;
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--c-text);
+  background: var(--c-shell-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  overflow-x: hidden;
 }
 
-/* Leaflet z-index fixes */
-.leaflet-container {
-  z-index: 0 !important;
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: var(--c-shell-bg);
 }
 
-.leaflet-pane {
-  z-index: 0 !important;
-}
-
-.leaflet-top,
-.leaflet-bottom {
-  z-index: 1 !important;
-}
-
-/* Map container must have height */
-.map-wrapper {
-  height: 400px;
+/* ── App shell — mobile first ── */
+.app-shell {
   width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
+  max-width: var(--app-max-width);
+  min-height: 100vh;
+  background: var(--c-shell-bg);
   position: relative;
-  z-index: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.screen-enter {
-  opacity: 0;
-  transform: translateY(8px);
+/* ── Tablet and above — floating card ── */
+@media (min-width: 640px) {
+  body, #root {
+    background: var(--c-app-bg);
+  }
+  #root {
+    padding: 28px 20px 28px;
+    align-items: flex-start;
+  }
+  .app-shell {
+    min-height: calc(100vh - 56px);
+    border-radius: var(--r-2xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl),
+      0 0 0 1px rgba(255,255,255,0.08);
+  }
 }
 
-.screen-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 200ms ease-out, transform 200ms ease-out;
+@media (min-width: 1024px) {
+  #root { padding: 40px 20px; }
 }
 
-.screen-exit {
-  opacity: 1;
-  transform: translateY(0);
+/* ── Map ── */
+.map-wrapper {
+  width: 100%;
+  height: var(--map-h);
+  flex-shrink: 0;
+  position: relative;
+}
+.leaflet-container { z-index: 0 !important; }
+.leaflet-top,
+.leaflet-bottom     { z-index: 1 !important; }
+
+/* ── Tab content scroll area ── */
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-4);
+  padding-bottom: calc(var(--bottom-bar-h) + var(--sp-4));
+  background: var(--c-surface);
 }
 
-.screen-exit-active {
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 150ms ease-out, transform 150ms ease-out;
+/* ── Cards ── */
+.sr-card {
+  background: var(--c-card);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-border);
+  box-shadow: var(--shadow-sm);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+/* ── Badges ── */
+.sr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.03em;
+}
+
+/* ── Label ── */
+.sr-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-accent-soft);
+  display: block;
+  margin-bottom: var(--sp-2);
+}
+
+/* ── Section heading ── */
+.sr-section-title {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--c-text);
+  margin-bottom: var(--sp-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Presets scrollable row ── */
+.presets-row {
+  display: flex;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+  flex-wrap: nowrap;
+}
+.presets-row::-webkit-scrollbar { display: none; }
+
+/* ── Progress bar ── */
+.progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    var(--c-accent), var(--c-accent-soft));
+  border-radius: var(--r-full);
+  animation: progressFill 3s ease-in-out infinite;
+}
+
+/* ── Animations ── */
+@keyframes progressFill {
+  0%   { width: 5%; }
+  60%  { width: 85%; }
+  100% { width: 95%; }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1);    opacity: 1;   }
+  50%       { transform: scale(1.08); opacity: 0.85;}
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.fade-in  { animation: fadeIn  0.3s ease forwards; }
+.slide-up { animation: slideUp 0.4s ease forwards; }
+
+/* ── Share button wrapper ── */
+.share-btn-wrapper {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--app-max-width);
+  padding: var(--sp-3) var(--sp-4) 
+           calc(var(--sp-4) + env(safe-area-inset-bottom));
+  background: rgba(240,244,248,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--c-border);
+  z-index: 200;
+}
+
+@media (min-width: 640px) {
+  .share-btn-wrapper {
+    position: sticky;
+    bottom: 0;
+    transform: none;
+    left: auto;
+    max-width: 100%;
+    border-radius: 0 0 
+      var(--r-2xl) var(--r-2xl);
+  }
 }
 

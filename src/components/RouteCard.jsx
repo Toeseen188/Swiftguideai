@@ -1,157 +1,313 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const ROUTE_COLORS = ['#16a34a', '#d97706', '#dc2626'];
-const ROUTE_BG     = ['#f0fdf4', '#fffbeb', '#fef2f2'];
-const ROUTE_LABELS = ['Safest Route', 'Alternative', 'Last Resort'];
+const ROUTE_CONFIG = [
+  {
+    label: 'Safest Route',
+    borderColor: '#16a34a',
+    bgColor: '#f0fdf4',
+    badgeBg: '#dcfce7',
+    badgeColor: '#15803d',
+    accentBg: 'rgba(22,163,74,0.08)',
+  },
+  {
+    label: 'Alternative',
+    borderColor: '#d97706',
+    bgColor: '#fffbeb',
+    badgeBg: '#fef3c7',
+    badgeColor: '#b45309',
+    accentBg: 'rgba(217,119,6,0.08)',
+  },
+  {
+    label: 'Last Resort',
+    borderColor: '#dc2626',
+    bgColor: '#fef2f2',
+    badgeBg: '#fee2e2',
+    badgeColor: '#b91c1c',
+    accentBg: 'rgba(220,38,38,0.08)',
+  },
+];
 
-function RouteCard({ route, index, isSelected, onSelect }) {
+export default function RouteCard({
+  route, index, isSelected, onSelect
+}) {
   const [expanded, setExpanded] = useState(false);
+
   if (!route?.route_name) return null;
 
-  const color = ROUTE_COLORS[index] || '#16a34a';
-  const bg    = ROUTE_BG[index]     || '#f0fdf4';
-  const label = ROUTE_LABELS[index] || 'Route';
+  const cfg = ROUTE_CONFIG[index] || ROUTE_CONFIG[0];
+  const safeScore   = Number(route.safety_score)    || 5;
+  const safeMinutes = Number(route.estimated_minutes)|| 0;
+  const safeKm      = Number(route.distance_km)     || 0;
+  const safeSteps   = Array.isArray(route.steps)
+    ? route.steps : [];
+  const shelterName = route.shelter?.name
+    || 'Nearest Shelter';
+
+  const scoreColor = safeScore >= 8
+    ? '#16a34a' : safeScore >= 5
+    ? '#d97706' : '#dc2626';
 
   return (
-    <div onClick={() => onSelect(index)}
+    <div
+      onClick={() => onSelect(index)}
       style={{
-        borderRadius: '16px',
-        border: '1px solid #e2e8f0',
-        boxShadow: isSelected
-          ? `0 4px 16px ${color}40`
-          : '0 1px 3px rgba(0,0,0,0.08)',
-        padding: 'clamp(12px, 3vw, 16px)',
-        marginBottom: '16px',
-        borderLeft: `4px solid ${color}`,
+        background: isSelected
+          ? cfg.bgColor : '#ffffff',
+        borderRadius: '14px',
+        border: `1.5px solid ${isSelected
+          ? cfg.borderColor : 'var(--gray-200)'}`,
+        borderLeft: `4px solid ${cfg.borderColor}`,
+        padding: '14px',
+        marginBottom: '10px',
         cursor: 'pointer',
-        transition: 'all 0.15s',
-        background: isSelected ? bg : '#ffffff',
+        transition: 'all 0.2s ease',
+        boxShadow: isSelected
+          ? `0 4px 20px ${cfg.borderColor}20`
+          : 'var(--shadow-sm)',
+        position: 'relative',
+        overflow: 'hidden',
       }}>
 
-      {/* Top row */}
+      {/* Selected background glow */}
+      {isSelected && (
+        <div style={{
+          position: 'absolute',
+          top: 0, right: 0,
+          width: '40%', height: '100%',
+          background: `linear-gradient(to left,
+            ${cfg.accentBg}, transparent)`,
+          pointerEvents: 'none',
+        }} />
+      )}
+
+      {/* ── Header row ── */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: 8,
-        gap: 8,
+        marginBottom: '8px',
+        gap: '8px',
       }}>
         <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Route label */}
           <span style={{
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            color,
+            display: 'inline-block',
+            fontSize: '0.62rem',
+            fontWeight: 800,
+            color: cfg.borderColor,
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
-            display: 'block',
-            marginBottom: 2,
+            marginBottom: '3px',
+            background: cfg.badgeBg,
+            padding: '2px 8px',
+            borderRadius: '999px',
           }}>
-            {label}
+            {cfg.label}
           </span>
+
+          {/* Route name */}
           <h3 style={{
             margin: 0,
-            fontSize: 'var(--text-base)',
+            fontSize: '0.95rem',
             fontWeight: 800,
-            color: '#0f172a',
+            color: 'var(--gray-900)',
             lineHeight: 1.2,
+            letterSpacing: '-0.01em',
+            fontFamily: 'var(--font-sans)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}>
             {route.route_name}
           </h3>
         </div>
+
+        {/* Safety score badge */}
         <div style={{
-          background: color,
+          background: scoreColor,
           color: '#fff',
-          borderRadius: '9999px',
-          padding: '4px 10px',
-          fontWeight: 900,
-          fontSize: '0.875rem',
-          whiteSpace: 'nowrap',
+          borderRadius: '10px',
+          padding: '6px 10px',
+          textAlign: 'center',
           flexShrink: 0,
+          minWidth: '48px',
         }}>
-          {route.safety_score}/10
+          <div style={{
+            fontWeight: 900,
+            fontSize: '1rem',
+            lineHeight: 1,
+            fontFamily: 'var(--font-sans)',
+          }}>
+            {safeScore}
+          </div>
+          <div style={{
+            fontSize: '0.55rem',
+            fontWeight: 700,
+            opacity: 0.85,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+          }}>
+            /10
+          </div>
         </div>
       </div>
 
-      {/* Meta row */}
+      {/* ── Meta pills ── */}
       <div style={{
         display: 'flex',
         gap: '6px',
-        marginBottom: '12px',
         flexWrap: 'wrap',
+        marginBottom: '10px',
       }}>
         {[
-          { icon: '⏱', val: `~${route.estimated_minutes || '?'} min` },
-          { icon: '📍', val: `${route.distance_km || '?'} km`        },
-          { icon: '🏕️', val: route.shelter?.name || 'Shelter'         },
+          { icon: '⏱', text: `~${safeMinutes} min`  },
+          { icon: '📍', text: `${safeKm} km`         },
+          { icon: '🏕️', text: shelterName             },
         ].map((m, i) => (
           <span key={i} style={{
-            fontSize: '0.875rem',
-            color: '#64748b',
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
-            gap: 3,
-            fontWeight: 500,
+            gap: '3px',
+            background: 'var(--gray-100)',
+            border: '1px solid var(--gray-200)',
+            borderRadius: '999px',
+            padding: '3px 9px',
+            fontSize: '0.72rem',
+            color: 'var(--gray-600)',
+            fontWeight: 600,
+            fontFamily: 'var(--font-sans)',
+            maxWidth: i === 2 ? '140px' : 'none',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}>
-            {m.icon} {m.val}
+            <span style={{ fontSize: '0.8rem' }}>
+              {m.icon}
+            </span>
+            {m.text}
           </span>
         ))}
       </div>
 
-      {/* Description */}
+      {/* ── Why safe ── */}
       <p style={{
-        margin: '0 0 12px',
-        fontSize: '0.875rem',
-        color: '#0f172a',
-        lineHeight: 1.6,
+        margin: '0 0 10px',
+        fontSize: '0.82rem',
+        color: 'var(--gray-600)',
+        lineHeight: 1.55,
+        fontFamily: 'var(--font-sans)',
       }}>
         {route.why_safe}
       </p>
 
-      {/* Toggle steps */}
-      <button
-        onClick={e => { e.stopPropagation(); setExpanded(!expanded); }}
-        style={{
-          background: 'none', border: 'none',
-          color, cursor: 'pointer',
-          fontSize: '0.75rem',
-          fontWeight: 700, padding: 0,
-          display: 'flex', alignItems: 'center', gap: 4,
-        }}>
-        {expanded ? '▲ Hide steps' : '▼ Turn-by-turn directions'}
-      </button>
+      {/* ── Divider ── */}
+      <div className="sr-divider"
+        style={{ margin: '10px 0' }} />
 
+      {/* ── Bottom row ── */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+
+        {/* Toggle steps */}
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            setExpanded(!expanded);
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: cfg.borderColor,
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-sans)',
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            letterSpacing: '0.01em',
+          }}>
+          <span style={{
+            fontSize: '0.65rem',
+            transition: 'transform 0.2s',
+            display: 'inline-block',
+            transform: expanded
+              ? 'rotate(180deg)' : 'rotate(0)',
+          }}>▼</span>
+          {expanded
+            ? 'Hide directions'
+            : 'Turn-by-turn'}
+        </button>
+
+        {/* Selected indicator */}
+        {isSelected ? (
+          <span style={{
+            fontSize: '0.72rem',
+            color: '#16a34a',
+            fontWeight: 700,
+            fontFamily: 'var(--font-sans)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            ✅ On map
+          </span>
+        ) : (
+          <span style={{
+            fontSize: '0.72rem',
+            color: 'var(--gray-400)',
+            fontWeight: 500,
+            fontFamily: 'var(--font-sans)',
+          }}>
+            Tap to select
+          </span>
+        )}
+      </div>
+
+      {/* ── Steps ── */}
       {expanded && (
-        <ol style={{
-          margin: '12px 0 0',
-          paddingLeft: '24px',
-        }}>
-          {(route.steps || []).map((step, i) => (
-            <li key={i} style={{
-              fontSize: '0.875rem',
-              color: '#64748b',
-              marginBottom: 6,
-              lineHeight: 1.5,
-            }}>
-              {step}
-            </li>
-          ))}
-        </ol>
-      )}
-
-      {isSelected && (
         <div style={{
           marginTop: '12px',
-          fontSize: '0.75rem',
-          color: '#16a34a',
-          fontWeight: 700,
-          display: 'flex', alignItems: 'center', gap: 4,
+          background: cfg.bgColor,
+          borderRadius: '10px',
+          padding: '12px',
+          border: `1px solid ${cfg.borderColor}30`,
         }}>
-          ✅ Selected — highlighted on map
+          <div style={{
+            fontSize: '0.68rem',
+            fontWeight: 800,
+            color: cfg.borderColor,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            marginBottom: '8px',
+            fontFamily: 'var(--font-sans)',
+          }}>
+            Turn-by-turn directions
+          </div>
+          <ol style={{
+            paddingLeft: '18px',
+            margin: 0,
+          }}>
+            {safeSteps.map((step, i) => (
+              <li key={i} style={{
+                fontSize: '0.8rem',
+                color: 'var(--gray-700)',
+                marginBottom: '6px',
+                lineHeight: 1.5,
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 500,
+              }}>
+                {step}
+              </li>
+            ))}
+          </ol>
         </div>
       )}
     </div>
   );
 }
-
-export default RouteCard;
 

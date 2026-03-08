@@ -4,21 +4,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#0F4C35',
-        accent: '#22C55E',
-        danger: '#EF4444',
-        warning: '#F59E0B',
-        background: '#F8FAFC',
-        text: '#111827'
+        background: '#0a0f1e',
+        'card-bg': '#111827',
+        'card-border': '#1f2937',
+        'primary-green': '#10b981',
+        'accent-green': '#34d399',
+        danger: '#ef4444',
+        warning: '#f59e0b',
+        'text-primary': '#f9fafb',
+        'text-secondary': '#9ca3af',
+        'button-bg': '#10b981',
+        'button-text': '#ffffff'
       },
       fontFamily: {
-        sans: [
-          '-apple-system',
-          'BlinkMacSystemFont',
-          '"Segoe UI"',
-          'system-ui',
-          'sans-serif'
-        ]
+        heading: ['Space Grotesk', 'sans-serif'],
+        body: ['Inter', 'sans-serif']
       },
       keyframes: {
         'pulse-strong': {

@@ -68,11 +68,25 @@ export default function MapView({
     : [32.3668, -86.2999];  // Montgomery, AL
 
   return (
-    <div className="map-wrapper">
+    <div 
+      className="map-wrapper"
+      style={{
+        width: '100%',
+        height: '260px',
+        position: 'relative',
+        zIndex: 0,
+        background: '#e2e8f0',
+        flexShrink: 0,
+      }}
+    >
       <MapContainer
         center={defaultCenter}
         zoom={13}
-        style={{ height: '100%', width: '100%' }}
+        style={{ 
+          height: '100%',
+          width: '100%',
+          minHeight: '260px'
+        }}
         scrollWheelZoom={false}
       >
         {/* OpenStreetMap — completely free, no token */}

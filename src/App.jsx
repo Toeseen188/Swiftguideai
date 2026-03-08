@@ -20,265 +20,323 @@ function InputScreen({
   disasterType, setDisasterType, handleGPS, handleSubmit, error
 }) {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `
-        radial-gradient(ellipse at 20% 20%, 
-          rgba(34,197,94,0.12) 0%, transparent 55%),
-        linear-gradient(160deg, #0a0f1e 0%, #0A3D2B 100%)
-      `,
-      display: 'flex',
-      flexDirection: 'column',
-      padding: '20px 16px 24px',
-      boxSizing: 'border-box',
-    }}>
-      {/* TOP — Logo block */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        flexShrink: 0,
-        marginBottom: '16px',
-      }}>
+    <div style={{ minHeight: "100vh", width: "100vw", background: "#c8d4df", display: "flex", justifyContent: "center" }}>
+      <div className="app-shell">
         <div style={{
-          width: 'clamp(36px, 5vw, 44px)', 
-          height: 'clamp(36px, 5vw, 44px)',
-          background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-          borderRadius: 12,
-          display: 'flex', alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '1.25rem',
-          boxShadow: '0 4px 16px rgba(34,197,94,0.35)',
-          flexShrink: 0,
-        }}>🛣️</div>
-        <div>
-          <h1 style={{
-            color: '#fff',
-            fontSize: 'clamp(1.3rem, 4vw, 1.6rem)',
-            fontWeight: 900,
-            margin: 0,
-            letterSpacing: '-0.03em',
-            lineHeight: 1,
-          }}>SwiftGuide AI</h1>
-          <p style={{
-            color: 'rgba(255,255,255,0.45)',
-            fontSize: '0.7rem',
-            margin: 0,
-            fontWeight: 500,
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
-          }}>
-            AI Emergency Evacuation
-          </p>
-        </div>
-      </div>
+          minHeight: '100vh',
+          background: `
+            radial-gradient(ellipse at 15% 15%, 
+              rgba(34,197,94,0.18) 0%, transparent 55%),
+            radial-gradient(ellipse at 85% 85%, 
+              rgba(10,61,43,0.5) 0%, transparent 55%),
+            linear-gradient(155deg, #0a0f1e 0%, #0A3D2B 100%)
+          `,
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '0 0 env(safe-area-inset-bottom)',
+        }}>
 
-      {/* MIDDLE — Input card */}
-      <div style={{
-        flex: 1,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}>
-        {/* Location */}
-        <div>
-          <label style={{
-            color: 'rgba(255,255,255,0.45)',
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            display: 'block',
-            marginBottom: '6px',
+          {/* ── Header bar ── */}
+          <div style={{
+            padding: '20px 20px 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            flexShrink: 0,
           }}>
-            Your Location
-          </label>
-          <div style={{ position: 'relative' }}>
-            <input
-              value={location}
-              onChange={e => setLocation(e.target.value)}
-              placeholder="Enter address or neighborhood..."
+            <div style={{
+              width: 38, height: 38,
+              background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+              borderRadius: '10px',
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.15rem',
+              boxShadow: '0 4px 14px rgba(34,197,94,0.4)',
+              flexShrink: 0,
+            }}>🛣️</div>
+            <div>
+              <div style={{
+                color: '#fff',
+                fontSize: '1.15rem',
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                lineHeight: 1,
+              }}>SwiftGuide AI</div>
+              <div style={{
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: '0.62rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                marginTop: '1px',
+              }}>Emergency Evacuation</div>
+            </div>
+          </div>
+
+          {/* ── Hero text ── */}
+          <div style={{
+            padding: '24px 20px 20px',
+            flexShrink: 0,
+          }}>
+            <h1 style={{
+              color: '#fff',
+              fontSize: 'clamp(1.6rem, 5vw, 2rem)',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              margin: '0 0 6px',
+            }}>
+              Find your<br/>
+              <span style={{ color: '#4ade80' }}>safe route</span> now.
+            </h1>
+            <p style={{
+              color: 'rgba(255,255,255,0.45)',
+              fontSize: '0.85rem',
+              fontWeight: 500,
+              margin: 0,
+              lineHeight: 1.5,
+            }}>
+              Guiding You to Safety When Every Second Counts.
+            </p>
+          </div>
+
+          {/* ── Input card ── */}
+          <div style={{
+            margin: '0 12px',
+            background: 'rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '18px',
+            padding: '18px 16px',
+            flexShrink: 0,
+          }}>
+
+            {/* Location field */}
+            <div style={{ marginBottom: '14px' }}>
+              <label className="sr-label">Your Location</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  value={location}
+                  onChange={e => setLocation(e.target.value)}
+                  placeholder="Address or neighborhood..."
+                  style={{
+                    width: '100%',
+                    padding: '12px 44px 12px 14px',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1.5px solid rgba(255,255,255,0.12)',
+                    borderRadius: '10px',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 500,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => 
+                    e.target.style.borderColor = '#22c55e'}
+                  onBlur={e => 
+                    e.target.style.borderColor = 'rgba(255,255,255,0.12)'}
+                />
+                <button
+                  onClick={handleGPS}
+                  title="Use my location"
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '1.1rem',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    lineHeight: 1,
+                    opacity: 0.8,
+                  }}>📍</button>
+              </div>
+            </div>
+
+            {/* Quick fill presets */}
+            <div 
+              className="hide-scrollbar"
+              style={{
+                display: 'flex',
+                gap: '6px',
+                overflowX: 'auto',
+                marginBottom: '16px',
+                paddingBottom: '2px',
+                alignItems: 'center',
+              }}>
+              <span style={{
+                color: 'rgba(255,255,255,0.3)',
+                fontSize: '0.62rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                flexShrink: 0,
+                marginRight: '2px',
+              }}>Quick:</span>
+              {[
+                { label: '🏛️ Downtown',
+                  loc: 'Downtown Montgomery, AL',
+                  lat: 32.3792, lng: -86.3077 },
+                { label: '🏠 Midtown',
+                  loc: 'Midtown Montgomery, AL',
+                  lat: 32.3668, lng: -86.2999 },
+                { label: '🌊 Riverfront',
+                  loc: 'Riverfront Montgomery, AL',
+                  lat: 32.3712, lng: -86.2990 },
+                { label: '🛣️ Auburn Rd',
+                  loc: 'Auburn Road Montgomery, AL',
+                  lat: 32.3505, lng: -86.2431 },
+              ].map(p => (
+                <button
+                  key={p.label}
+                  onClick={() => {
+                    setLocation(p.loc);
+                    setLat(p.lat);
+                    setLng(p.lng);
+                  }}
+                  style={{
+                    padding: '5px 11px',
+                    background: location === p.loc
+                      ? 'rgba(34,197,94,0.2)'
+                      : 'rgba(255,255,255,0.06)',
+                    border: `1px solid ${location === p.loc
+                      ? '#22c55e'
+                      : 'rgba(255,255,255,0.12)'}`,
+                    borderRadius: '999px',
+                    color: location === p.loc
+                      ? '#86efac'
+                      : 'rgba(255,255,255,0.55)',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s',
+                    fontFamily: 'var(--font-sans)',
+                  }}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Emergency type */}
+            <label className="sr-label">Emergency Type</label>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '8px',
+            }}>
+              {[
+                { type: 'flood',      emoji: '🌊', label: 'Flood'      },
+                { type: 'fire',       emoji: '🔥', label: 'Fire'       },
+                { type: 'tornado',    emoji: '🌪️', label: 'Tornado'    },
+                { type: 'chemical',   emoji: '☣️', label: 'Chemical'   },
+              ].map(({ type, emoji, label }) => (
+                <button
+                  key={type}
+                  onClick={() => setDisasterType(type)}
+                  style={{
+                    padding: '13px 8px',
+                    background: disasterType === type
+                      ? 'rgba(34,197,94,0.18)'
+                      : 'rgba(255,255,255,0.04)',
+                    border: `1.5px solid ${disasterType === type
+                      ? '#22c55e'
+                      : 'rgba(255,255,255,0.1)'}`,
+                    borderRadius: '12px',
+                    color: disasterType === type
+                      ? '#fff'
+                      : 'rgba(255,255,255,0.5)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'all 0.15s',
+                    fontFamily: 'var(--font-sans)',
+                  }}>
+                  <span style={{ fontSize: '1.35rem', lineHeight: 1 }}>
+                    {emoji}
+                  </span>
+                  <span style={{
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    letterSpacing: '0.01em',
+                  }}>
+                    {label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── CTA ── */}
+          <div style={{
+            padding: '14px 12px 20px',
+            flexShrink: 0,
+          }}>
+            <button
+              onClick={handleSubmit}
+              disabled={!location || !disasterType}
               style={{
                 width: '100%',
-                padding: '12px 44px 12px 14px',
-                background: 'rgba(255,255,255,0.08)',
-                border: '1.5px solid rgba(255,255,255,0.15)',
+                padding: '15px',
+                background: (!location || !disasterType)
+                  ? 'rgba(255,255,255,0.07)'
+                  : 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)',
+                color: (!location || !disasterType)
+                  ? 'rgba(255,255,255,0.2)'
+                  : '#fff',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '0.95rem',
+                fontWeight: 800,
+                fontFamily: 'var(--font-sans)',
+                letterSpacing: '0.02em',
+                cursor: (!location || !disasterType)
+                  ? 'not-allowed' : 'pointer',
+                boxShadow: (!location || !disasterType)
+                  ? 'none'
+                  : '0 4px 20px rgba(34,197,94,0.4)',
+                transition: 'all 0.2s',
+              }}>
+              🚨 Find My Safe Route
+            </button>
+
+            {error && (
+              <div style={{
+                marginTop: '10px',
+                padding: '11px 14px',
+                background: 'rgba(220,38,38,0.12)',
+                border: '1px solid rgba(220,38,38,0.25)',
                 borderRadius: '10px',
-                color: '#fff',
-                fontSize: '0.9rem',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-              onFocus={e => e.target.style.borderColor='#22c55e'}
-              onBlur={e => e.target.style.borderColor='rgba(255,255,255,0.15)'}
-            />
-            <button onClick={handleGPS}
-              style={{
-                position: 'absolute', right: 10,
-                top: '50%', transform: 'translateY(-50%)',
-                background: 'none', border: 'none',
-                fontSize: '1.1rem', cursor: 'pointer', padding: 4,
-              }}>📍</button>
+                color: '#fca5a5',
+                fontSize: '0.82rem',
+                fontWeight: 500,
+                textAlign: 'center',
+              }}>
+                ⚠️ {error}
+              </div>
+            )}
+
+            <p style={{
+              color: 'rgba(255,255,255,0.18)',
+              fontSize: '0.62rem',
+              textAlign: 'center',
+              marginTop: '12px',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              fontWeight: 600,
+            }}>
+              Powered by AI · City of Montgomery Open Data
+            </p>
           </div>
         </div>
-
-        {/* Quick fill */}
-        <div style={{
-          display: 'flex',
-          gap: '6px',
-          overflowX: 'auto',
-          paddingBottom: '2px',
-          scrollbarWidth: 'none',
-        }}>
-          <span style={{
-            color: 'rgba(255,255,255,0.3)',
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            alignSelf: 'center',
-            flexShrink: 0,
-          }}>Quick:</span>
-          {[
-            { label: '🏛️ Downtown',   loc: 'Downtown Montgomery, AL',    lat: 32.3792, lng: -86.3077 },
-            { label: '🏠 Midtown',    loc: 'Midtown Montgomery, AL',     lat: 32.3668, lng: -86.2999 },
-            { label: '🌊 Riverfront', loc: 'Riverfront Montgomery, AL',  lat: 32.3712, lng: -86.2990 },
-            { label: '🛣️ Auburn Rd',  loc: 'Auburn Road Montgomery, AL', lat: 32.3505, lng: -86.2431 },
-          ].map(p => (
-            <button key={p.label}
-              onClick={() => { setLocation(p.loc); setLat(p.lat); setLng(p.lng); }}
-              style={{
-                padding: '4px 10px',
-                background: location === p.loc
-                  ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.07)',
-                border: `1px solid ${location === p.loc
-                  ? '#22c55e' : 'rgba(255,255,255,0.15)'}`,
-                borderRadius: '999px',
-                color: location === p.loc
-                  ? '#86efac' : 'rgba(255,255,255,0.6)',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                flexShrink: 0,
-                whiteSpace: 'nowrap',
-              }}>
-              {p.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Emergency type label */}
-        <label style={{
-          color: 'rgba(255,255,255,0.45)',
-          fontSize: '0.65rem',
-          fontWeight: 700,
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
-          display: 'block',
-          marginBottom: '-4px',
-        }}>
-          Emergency Type
-        </label>
-
-        {/* 2x2 disaster grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '8px',
-          flex: 1,
-        }}>
-          {[
-            { type: 'flood',      emoji: '🌊', label: 'Flood'      },
-            { type: 'fire',       emoji: '🔥', label: 'Fire'       },
-            { type: 'earthquake', emoji: '🌍', label: 'Earthquake' },
-            { type: 'chemical',   emoji: '☣️', label: 'Chemical'   },
-          ].map(({ type, emoji, label }) => (
-            <button key={type}
-              onClick={() => setDisasterType(type)}
-              style={{
-                background: disasterType === type
-                  ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.05)',
-                border: `1.5px solid ${disasterType === type
-                  ? '#22c55e' : 'rgba(255,255,255,0.12)'}`,
-                borderRadius: '10px',
-                color: disasterType === type
-                  ? '#fff' : 'rgba(255,255,255,0.55)',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                transition: 'all 0.15s',
-                minHeight: 'clamp(64px, 10vh, 90px)',
-              }}>
-              <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>
-                {emoji}
-              </span>
-              <span style={{ fontWeight: 700, fontSize: '0.82rem' }}>
-                {label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* BOTTOM — CTA always visible */}
-      <div style={{
-        paddingTop: '12px',
-        flexShrink: 0,
-      }}>
-        <button
-          onClick={handleSubmit}
-          disabled={!location || !disasterType}
-          style={{
-            width: '100%',
-            padding: '15px',
-            background: (!location || !disasterType)
-              ? 'rgba(255,255,255,0.08)'
-              : 'linear-gradient(135deg, #16a34a, #22c55e)',
-            color: (!location || !disasterType)
-              ? 'rgba(255,255,255,0.25)' : '#fff',
-            border: 'none',
-            borderRadius: '12px',
-            fontSize: '1rem',
-            fontWeight: 800,
-            cursor: (!location || !disasterType)
-              ? 'not-allowed' : 'pointer',
-            letterSpacing: '0.02em',
-            boxShadow: (!location || !disasterType)
-              ? 'none' : '0 4px 20px rgba(34,197,94,0.4)',
-            transition: 'all 0.2s',
-          }}>
-          🚨 Find My Safe Route
-        </button>
-
-        {error && (
-          <div style={{
-            marginTop: '8px',
-            padding: '10px 14px',
-            background: 'rgba(220,38,38,0.15)',
-            border: '1px solid rgba(220,38,38,0.3)',
-            borderRadius: '10px',
-            color: '#fca5a5',
-            fontSize: '0.8rem',
-            textAlign: 'center',
-          }}>
-            ⚠️ {error}
-          </div>
-        )}
-
-        <p style={{
-          color: 'rgba(255,255,255,0.2)',
-          fontSize: '0.65rem',
-          textAlign: 'center',
-          margin: '10px 0 0',
-          letterSpacing: '0.05em',
-          textTransform: 'uppercase',
-        }}>
-          Powered by AI · Real City Data
-        </p>
       </div>
     </div>
   );
@@ -286,57 +344,78 @@ function InputScreen({
 
 function LoadingScreen() {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: `linear-gradient(160deg, #0a0f1e 0%, #0A3D2B 100%)`,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px 16px',
-      boxSizing: 'border-box',
-    }}>
-      <div style={{
-        fontSize: 'clamp(2.75rem, 10vw, 4rem)', 
-        marginBottom: '1.5rem',
-        animation: 'pulse 1.5s ease-in-out infinite',
-      }}>🟢</div>
+    <div style={{ minHeight: "100vh", width: "100vw", background: "#c8d4df", display: "flex", justifyContent: "center" }}>
+      <div className="app-shell">
+        <div style={{
+          width: '100%',
+          minHeight: '100vh',
+          background: `linear-gradient(155deg, 
+            #0a0f1e 0%, #0A3D2B 100%)`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px 24px',
+          gap: '20px',
+        }}>
 
-      <h2 style={{ 
-        fontWeight: 800, 
-        marginBottom: '0.5rem',
-        fontSize: 'clamp(1.25rem, 3.5vw, 1.5rem)',
-        color: '#fff',
-      }}>
-        Finding your safe route...
-      </h2>
-      <LoadingMessage />
+          {/* Animated logo */}
+          <div style={{
+            width: 72, height: 72,
+            background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '2rem',
+            animation: 'pulse 2s ease-in-out infinite',
+            boxShadow: '0 0 48px rgba(34,197,94,0.45)',
+          }}>🛣️</div>
 
-      <div style={{ 
-        display: 'flex', 
-        gap: '8px', 
-        marginTop: '2rem',
-        maxWidth: 'clamp(180px, 50vw, 260px)',
-      }}>
-        {[0,1,2].map(i => (
-          <div key={i} style={{
-            width: '10px', height: '10px',
-            borderRadius: '50%', background: '#22c55e',
-            animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
-          }} />
-        ))}
+          {/* Text */}
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{
+              color: '#fff',
+              fontSize: '1.35rem',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              margin: '0 0 8px',
+            }}>
+              Calculating your route
+            </h2>
+            <LoadingMessage />
+          </div>
+
+          {/* Progress bar */}
+          <div style={{
+            width: '100%',
+            maxWidth: '220px',
+            height: '3px',
+            background: 'rgba(255,255,255,0.08)',
+            borderRadius: '999px',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              background: 'linear-gradient(90deg, #16a34a, #4ade80)',
+              borderRadius: '999px',
+              animation: 'srProgress 3s ease-in-out infinite',
+            }} />
+          </div>
+
+          {/* Sub text */}
+          <p style={{
+            color: 'rgba(255,255,255,0.2)',
+            fontSize: '0.72rem',
+            fontWeight: 600,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            textAlign: 'center',
+          }}>
+            Analyzing real city data
+          </p>
+        </div>
       </div>
-
-      <style>{`
-        @keyframes pulse { 
-          0%,100%{transform:scale(1);opacity:1;}
-          50%{transform:scale(1.15);opacity:0.8;}
-        }
-        @keyframes bounce{
-          0%,100%{transform:translateY(0);}
-          50%{transform:translateY(-10px);}
-        }
-      `}</style>
     </div>
   );
 }
@@ -347,127 +426,193 @@ function ResultsScreen({
   blockedRoads, dataSource, setScreen, disasterType, location
 }) {
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#f0f4f8',
-      display: 'flex',
-      flexDirection: 'column',
-      boxSizing: 'border-box',
-    }}>
-      {/* Header */}
-      <header style={{
-        height: '56px',
-        minHeight: '56px',
-        maxHeight: '56px',
-        width: '100%',
-        background: '#0a0f1e',
-        padding: '0 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        boxSizing: 'border-box',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1.3rem' }}>🟢</span>
-          <span style={{ color: '#fff', fontWeight: 800, fontSize: '1.1rem' }}>
-            SwiftGuide AI
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{
-            fontSize: '0.7rem', fontWeight: 700,
-            padding: '3px 10px', borderRadius: '999px',
-            background: dataSource === 'montgomery-open-data' 
-              ? '#dcfce7' : '#fef9c3',
-            color: dataSource === 'montgomery-open-data' 
-              ? '#16a34a' : '#a16207',
+    <div style={{ minHeight: "100vh", width: "100vw", background: "#c8d4df", display: "flex", justifyContent: "center" }}>
+      <div className="app-shell">
+        <div style={{
+          minHeight: '100vh',
+          background: 'var(--gray-100)',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+
+          {/* ── Sticky header ── */}
+          <header style={{
+            height: 'var(--header-height)',
+            minHeight: 'var(--header-height)',
+            background: 'var(--gray-950)',
+            padding: '0 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'sticky',
+            top: 0,
+            zIndex: 100,
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            flexShrink: 0,
           }}>
-            {dataSource === 'montgomery-open-data' 
-              ? '🟢 Live City Data' : '🟡 Demo Data'}
-          </span>
-          <button onClick={() => { setScreen('input'); }}
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: 'none', color: '#fff',
-              padding: '6px 12px', borderRadius: '8px',
-              cursor: 'pointer', fontSize: '0.82rem',
-              fontWeight: 600,
+
+            {/* Logo */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}>
-            ← New Search
-          </button>
-        </div>
-      </header>
+              <div style={{
+                width: 30, height: 30,
+                background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                borderRadius: '8px',
+                display: 'flex', alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.9rem',
+              }}>🛣️</div>
+              <span style={{
+                color: '#fff',
+                fontWeight: 800,
+                fontSize: '1rem',
+                letterSpacing: '-0.02em',
+              }}>SwiftGuide AI</span>
+            </div>
 
-      {/* Map */}
-      <MapView
-        userLocation={{ lat, lng }}
-        routes={routes}
-        shelters={shelters}
-        dangerZone={dangerZone}
-        selectedRoute={selectedRoute}
-        sirens={sirens}
-        emergencyStations={emergencyStations}
-        pharmacies={pharmacies}
-      />
-
-      {/* Stats Bar */}
-      <StatsBar
-        shelters={shelters}
-        stations={emergencyStations}
-        sirens={sirens}
-        blockedRoads={blockedRoads}
-      />
-
-      {/* Tab Navigation */}
-      <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {/* Content */}
-      <div style={{ 
-        padding: '1rem', 
-        paddingBottom: 'clamp(80px, 12vh, 100px)',
-        flex: 1,
-      }}>
-        {activeTab === 'routes' && (
-          <div>
-            <h2 style={{ 
-              fontSize: '1.1rem', fontWeight: 800,
-              marginBottom: '0.75rem', color: '#111827' 
+            {/* Right side */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
             }}>
-              🛣️ Your Evacuation Routes
-            </h2>
-            {routes.map((route, i) => (
-              <RouteCard key={i} route={route} index={i}
-                isSelected={selectedRoute === i}
-                onSelect={setSelectedRoute} />
-            ))}
-          </div>
-        )}
-        {activeTab === 'shelters' && (
-          <ShelterList shelters={shelters} 
-            userLat={lat} userLng={lng} />
-        )}
-        {activeTab === 'resources' && (
-          <ResourcesList 
-            stations={emergencyStations}
+              {/* Data source badge */}
+              <span className={
+                dataSource === 'montgomery-open-data'
+                  ? 'sr-badge sr-badge-live'
+                  : 'sr-badge sr-badge-amber'
+              }>
+                {dataSource === 'montgomery-open-data'
+                  ? '🟢 Live Data'
+                  : '🟡 Demo'}
+              </span>
+
+              {/* Back button */}
+              <button
+                onClick={() => {
+                  setScreen('input');
+                  setRoutes([]);
+                }}
+                style={{
+                  background: 'rgba(255,255,255,0.07)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'rgba(255,255,255,0.65)',
+                  padding: '5px 12px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  fontFamily: 'var(--font-sans)',
+                  transition: 'all 0.15s',
+                  whiteSpace: 'nowrap',
+                }}>
+                ← Back
+              </button>
+            </div>
+          </header>
+
+          {/* ── Map ── */}
+          <MapView
+            userLocation={{ lat, lng }}
+            routes={routes}
+            shelters={shelters}
+            dangerZone={dangerZone}
+            selectedRoute={selectedRoute}
+            sirens={sirens}
+            emergencyStations={emergencyStations}
             pharmacies={pharmacies}
-            userLat={lat} userLng={lng} />
-        )}
-        {activeTab === 'alerts' && (
-          <AlertsPanel 
-            blockedRoads={blockedRoads}
-            disasterType={disasterType}
-            location={location} />
-        )}
-      </div>
+          />
 
-      {/* Share button */}
-      {routes.length > 0 && (
-        <ShareButton route={routes[selectedRoute]} />
-      )}
+          {/* ── Stats bar ── */}
+          <StatsBar
+            shelters={shelters}
+            stations={emergencyStations}
+            sirens={sirens}
+            blockedRoads={blockedRoads}
+          />
+
+          {/* ── Tab nav ── */}
+          <TabNav
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+
+          {/* ── Tab content ── */}
+          <div className="tab-content" style={{ flex: 1 }}>
+            {activeTab === 'routes' && (
+              <div className="animate-fade-in-up">
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '14px',
+                }}>
+                  <h2 className="sr-section-title" 
+                    style={{ margin: 0 }}>
+                    Evacuation Routes
+                  </h2>
+                  <span style={{
+                    fontSize: '0.72rem',
+                    color: 'var(--gray-400)',
+                    fontWeight: 600,
+                    background: 'var(--gray-200)',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                  }}>
+                    {routes.length} found
+                  </span>
+                </div>
+                {routes.map((route, i) => (
+                  <RouteCard
+                    key={i}
+                    route={route}
+                    index={i}
+                    isSelected={selectedRoute === i}
+                    onSelect={setSelectedRoute}
+                  />
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'shelters' && (
+              <div className="animate-fade-in-up">
+                <ShelterList
+                  shelters={shelters}
+                  userLat={lat}
+                  userLng={lng}
+                />
+              </div>
+            )}
+
+            {activeTab === 'resources' && (
+              <div className="animate-fade-in-up">
+                <ResourcesList
+                  stations={emergencyStations}
+                  pharmacies={pharmacies}
+                  userLat={lat}
+                  userLng={lng}
+                />
+              </div>
+            )}
+
+            {activeTab === 'alerts' && (
+              <div className="animate-fade-in-up">
+                <AlertsPanel
+                  blockedRoads={blockedRoads}
+                  disasterType={disasterType}
+                  location={location}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* ── Share button ── */}
+          <ShareButton route={routes[selectedRoute]} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -548,47 +693,31 @@ export default function App() {
   // UNIFIED SHELL — Same wrapper for ALL screens
   // ════════════════════════════════════════════════════════════════
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#dde3ea',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-    }}>
-      <div className="app-shell" style={{
-        width: '100%',
-        maxWidth: '520px',
-        minHeight: '100vh',
-        background: '#0a0f1e',
-        position: 'relative',
-        boxShadow: '0 0 80px rgba(0,0,0,0.25)',
-      }}>
-        {/* Screen content switches here — shell NEVER changes */}
-        {screen === 'input' && (
-          <InputScreen
-            location={location} setLocation={setLocation}
-            lat={lat} setLat={setLat}
-            lng={lng} setLng={setLng}
-            disasterType={disasterType} setDisasterType={setDisasterType}
-            handleGPS={handleGPS} handleSubmit={handleSubmit}
-            error={error}
-          />
-        )}
-        {screen === 'loading' && <LoadingScreen />}
-        {screen === 'results' && (
-          <ResultsScreen
-            lat={lat} lng={lng} 
-            routes={routes} shelters={shelters}
-            dangerZone={dangerZone} selectedRoute={selectedRoute}
-            setSelectedRoute={setSelectedRoute}
-            sirens={sirens} emergencyStations={emergencyStations}
-            pharmacies={pharmacies} activeTab={activeTab}
-            setActiveTab={setActiveTab} blockedRoads={blockedRoads}
-            dataSource={dataSource} setScreen={setScreen}
-            disasterType={disasterType} location={location}
-          />
-        )}
-      </div>
-    </div>
+    <>
+      {screen === 'input' && (
+        <InputScreen
+          location={location} setLocation={setLocation}
+          lat={lat} setLat={setLat}
+          lng={lng} setLng={setLng}
+          disasterType={disasterType} setDisasterType={setDisasterType}
+          handleGPS={handleGPS} handleSubmit={handleSubmit}
+          error={error}
+        />
+      )}
+      {screen === 'loading' && <LoadingScreen />}
+      {screen === 'results' && (
+        <ResultsScreen
+          lat={lat} lng={lng} 
+          routes={routes} shelters={shelters}
+          dangerZone={dangerZone} selectedRoute={selectedRoute}
+          setSelectedRoute={setSelectedRoute}
+          sirens={sirens} emergencyStations={emergencyStations}
+          pharmacies={pharmacies} activeTab={activeTab}
+          setActiveTab={setActiveTab} blockedRoads={blockedRoads}
+          dataSource={dataSource} setScreen={setScreen}
+          disasterType={disasterType} location={location}
+        />
+      )}
+    </>
   );
 }

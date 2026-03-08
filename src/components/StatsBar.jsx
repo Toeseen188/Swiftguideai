@@ -1,11 +1,31 @@
-import React from 'react';
-
-export default function StatsBar({ shelters, stations, sirens, blockedRoads }) {
+export default function StatsBar({
+  shelters, stations, sirens, blockedRoads
+}) {
   const stats = [
-    { icon: '🏕️', value: shelters?.length || 0,    label: 'Shelters'  },
-    { icon: '🚒', value: stations?.length || 0,    label: 'Stations'  },
-    { icon: '🚨', value: sirens?.length || 0,      label: 'Sirens'    },
-    { icon: '🚧', value: blockedRoads?.length || 0,label: 'Closures'  },
+    {
+      icon: '🏕️',
+      value: shelters?.length || 0,
+      label: 'Shelters',
+      color: '#22c55e',
+    },
+    {
+      icon: '🚒',
+      value: stations?.length || 0,
+      label: 'Stations',
+      color: '#0ea5e9',
+    },
+    {
+      icon: '🚨',
+      value: sirens?.length || 0,
+      label: 'Sirens',
+      color: '#f97316',
+    },
+    {
+      icon: '🚧',
+      value: blockedRoads?.length || 0,
+      label: 'Closures',
+      color: '#dc2626',
+    },
   ];
 
   return (
@@ -13,36 +33,63 @@ export default function StatsBar({ shelters, stations, sirens, blockedRoads }) {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
       background: '#0f172a',
+      borderTop: '1px solid rgba(255,255,255,0.04)',
+      borderBottom: '1px solid rgba(255,255,255,0.04)',
+      flexShrink: 0,
     }}>
       {stats.map((s, i) => (
         <div key={i} style={{
-          textAlign: 'center',
-          padding: 'clamp(8px, 1.5vh, 12px) 4px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '10px 4px',
+          gap: '2px',
           borderRight: i < 3
-            ? '1px solid rgba(255,255,255,0.07)' : 'none',
+            ? '1px solid rgba(255,255,255,0.06)'
+            : 'none',
+          position: 'relative',
         }}>
-          <div style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)', lineHeight: 1 }}>
-            {s.icon}
-          </div>
+          {/* Top accent line */}
           <div style={{
-            color: '#22c55e',
+            position: 'absolute',
+            top: 0, left: '20%',
+            width: '60%', height: '2px',
+            background: s.value > 0
+              ? s.color : 'transparent',
+            borderRadius: '0 0 2px 2px',
+            transition: 'all 0.3s',
+          }} />
+
+          <span style={{
+            fontSize: '1rem',
+            lineHeight: 1,
+          }}>
+            {s.icon}
+          </span>
+
+          <span style={{
+            color: s.value > 0 ? s.color : '#475569',
             fontWeight: 900,
-            fontSize: 'clamp(1rem, 3vw, 1.2rem)',
-            lineHeight: 1.2,
-            marginTop: 2,
+            fontSize: '1.15rem',
+            lineHeight: 1,
+            fontFamily: 'var(--font-sans)',
+            letterSpacing: '-0.02em',
+            transition: 'color 0.3s',
           }}>
             {s.value}
-          </div>
-          <div style={{
-            color: 'rgba(255,255,255,0.4)',
-            fontSize: 'clamp(0.58rem, 1.5vw, 0.65rem)',
+          </span>
+
+          <span style={{
+            color: 'rgba(255,255,255,0.35)',
+            fontSize: '0.58rem',
             fontWeight: 700,
             textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-            marginTop: 1,
+            letterSpacing: '0.07em',
+            lineHeight: 1,
           }}>
             {s.label}
-          </div>
+          </span>
         </div>
       ))}
     </div>
