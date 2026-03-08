@@ -18,6 +18,7 @@ app.use(cors({
     'http://localhost:3004',
     'https://swiftguide-ai.vercel.app',
     'https://69ad67ef292be9b3c7cfbad0--swiftguide.netlify.app',
+    'http://localhost:5173',  // Added for Vite dev server
   ],
   methods: ['GET', 'POST'],
 }));
@@ -42,4 +43,14 @@ const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`SwiftGuide API listening on port ${port}`);
 });
+
+// Example from src/services/api.js (confirm this pattern in your code)
+// ...existing code...
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const response = await fetch(`${API_URL}/api/generate-route`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ /* your data */ }),
+});
+// ...existing code...
 
