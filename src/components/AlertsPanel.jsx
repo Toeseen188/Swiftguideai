@@ -27,18 +27,18 @@ const DISASTER_INFO = {
       'Meet at your designated rally point',
     ],
   },
-  tornado: {
-    icon: '🌪️',
-    color: '#7c3aed',
-    bg: '#fdf4ff',
-    border: '#e9d5ff',
-    badge: '#6d28d9',
-    badgeBg: '#ede9fe',
+  oilspill: {
+    icon: '🛢️',
+    color: '#0f172a',
+    bg: '#f1f5f9',
+    border: '#cbd5e1',
+    badge: '#334155',
+    badgeBg: '#e2e8f0',
     tips: [
-      'Move to lowest floor or interior room',
-      'Stay away from windows immediately',
-      'Protect your head and neck',
-      'Do not shelter under bridges or overpasses',
+      'Evacuate the area immediately',
+      'Avoid contact with spilled oil or fumes',
+      'Report the spill to authorities',
+      'Do not attempt to drive through oil-affected roads',
     ],
   },
   chemical: {
@@ -58,21 +58,21 @@ const DISASTER_INFO = {
 };
 
 const EMERGENCY_CONTACTS = [
-  { label: 'Emergency',     number: '911',
+  { label: 'Emergency',     number: '112',
     icon: '🚨', color: '#dc2626', bg: '#fef2f2',
     border: '#fecaca' },
-  { label: 'Fire Dept.',    number: '334-241-2651',
+  { label: 'Fire Service',    number: '0803 303 8181',
     icon: '🚒', color: '#ea580c', bg: '#fff7ed',
     border: '#fed7aa' },
-  { label: 'Police Dept.',  number: '334-241-2651',
+  { label: 'Police',  number: '0705 629 9991',
     icon: '🚓', color: '#1d4ed8', bg: '#eff6ff',
     border: '#bfdbfe' },
-  { label: 'Red Cross',     number: '1-800-733-2767',
+  { label: 'Lagos State Emergency', number: '767',
+    icon: '📞', color: '#0ea5e9', bg: '#f0f9ff',
+    border: '#bae6fd' },
+  { label: 'Red Cross',     number: '01 342 5472',
     icon: '❤️', color: '#dc2626', bg: '#fef2f2',
     border: '#fecaca' },
-  { label: 'FEMA Helpline', number: '1-800-621-3362',
-    icon: '🏛️', color: '#0369a1', bg: '#f0f9ff',
-    border: '#bae6fd' },
 ];
 
 export default function AlertsPanel({

@@ -65,7 +65,7 @@ export default function MapView({
 }) {
   const defaultCenter = userLocation
     ? [userLocation.lat, userLocation.lng]
-    : [32.3668, -86.2999];  // Montgomery, AL
+    : [6.5244, 3.3792];  // Lagos, Nigeria
 
   return (
     <div 

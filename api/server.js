@@ -17,6 +17,8 @@ app.use(cors({
     'https://swiftguide-ai.vercel.app',
     'https://69ad67ef292be9b3c7cfbad0--swiftguide.netlify.app',
     'https://swiftguide.netlify.app',
+    // Nigeria-specific frontend (add your deployed Nigeria UI URL here)
+    process.env.NIGERIA_UI_ORIGIN || 'http://localhost:3005'
   ],
   methods: ['GET', 'POST'],
 }));

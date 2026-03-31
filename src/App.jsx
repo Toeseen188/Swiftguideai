@@ -9,7 +9,7 @@ import AlertsPanel from './components/AlertsPanel.jsx';
 import ShareButton from './components/ShareButton.jsx';
 import LoadingMessage from './components/LoadingMessage.jsx';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 
 // ════════════════════════════════════════════════════════════════
 // SCREEN COMPONENTS — Each screen is a self-contained component
@@ -179,18 +179,18 @@ function InputScreen({
                 marginRight: '2px',
               }}>Quick:</span>
               {[
-                { label: '🏛️ Downtown',
-                  loc: 'Downtown Montgomery, AL',
-                  lat: 32.3792, lng: -86.3077 },
-                { label: '🏠 Midtown',
-                  loc: 'Midtown Montgomery, AL',
-                  lat: 32.3668, lng: -86.2999 },
-                { label: '🌊 Riverfront',
-                  loc: 'Riverfront Montgomery, AL',
-                  lat: 32.3712, lng: -86.2990 },
-                { label: '🛣️ Auburn Rd',
-                  loc: 'Auburn Road Montgomery, AL',
-                  lat: 32.3505, lng: -86.2431 },
+                { label: '🏛️ Lagos Island',
+                  loc: 'Lagos Island, Lagos, Nigeria',
+                  lat: 6.4541, lng: 3.3942 },
+                { label: '🏠 Surulere',
+                  loc: 'Surulere, Lagos, Nigeria',
+                  lat: 6.5006, lng: 3.3584 },
+                { label: '🌊 Victoria Island',
+                  loc: 'Victoria Island, Lagos, Nigeria',
+                  lat: 6.4281, lng: 3.4219 },
+                { label: '🛣️ Ikeja',
+                  loc: 'Ikeja, Lagos, Nigeria',
+                  lat: 6.6018, lng: 3.3515 },
               ].map(p => (
                 <button
                   key={p.label}
@@ -234,7 +234,7 @@ function InputScreen({
               {[
                 { type: 'flood',      emoji: '🌊', label: 'Flood'      },
                 { type: 'fire',       emoji: '🔥', label: 'Fire'       },
-                { type: 'tornado',    emoji: '🌪️', label: 'Tornado'    },
+                { type: 'oilspill',   emoji: '🛢️', label: 'Oil Spill' },
                 { type: 'chemical',   emoji: '☣️', label: 'Chemical'   },
               ].map(({ type, emoji, label }) => (
                 <button
@@ -657,7 +657,7 @@ export default function App() {
     setScreen('loading');
 
     try {
-      const res = await fetch(`${API_URL}/api/generate-route`, {
+      const res = await fetch(`/api/generate-route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lat, lng, disasterType, location }),

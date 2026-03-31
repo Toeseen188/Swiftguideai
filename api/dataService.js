@@ -1,5 +1,5 @@
 import { getMockDisasterData } from './mockData.js';
-import { getMontgomeryDisasterData } from './montgomeryData.js';
+import { getNigeriaDisasterData } from './nigeriaData.js';
 
 export async function getDisasterData(lat, lng, disasterType, location) {
   console.log('[SwiftGuide AI] USE_REAL_DATA env value:', 
@@ -14,7 +14,7 @@ export async function getDisasterData(lat, lng, disasterType, location) {
     return { ...getMockDisasterData(lat, lng, disasterType), dataSource: 'mock' };
   }
   try {
-    const data = await getMontgomeryDisasterData(lat, lng, disasterType);
+    const data = await getNigeriaDisasterData(lat, lng, disasterType);
     return data;
   } catch (err) {
     console.warn('[SwiftGuide AI] ❌ Real data failed, falling back:', err.message);
