@@ -9,6 +9,8 @@ import AlertsPanel from './components/AlertsPanel.jsx';
 import ShareButton from './components/ShareButton.jsx';
 import LoadingMessage from './components/LoadingMessage.jsx';
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 
 
 // ════════════════════════════════════════════════════════════════
@@ -657,7 +659,7 @@ export default function App() {
     setScreen('loading');
 
     try {
-      const res = await fetch(`/api/generate-route`, {
+      const res = await fetch(`${API_BASE}/api/generate-route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lat, lng, disasterType, location }),
