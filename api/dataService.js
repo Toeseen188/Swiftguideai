@@ -8,9 +8,15 @@ export async function getDisasterData(lat, lng, disasterType, location) {
     process.env.USE_REAL_DATA === 'true');
 
   const USE_REAL = process.env.USE_REAL_DATA === 'true';
+  const isNigeria = location && location.toLowerCase().includes('lagos');
   
   if (!USE_REAL) {
     console.log('[SwiftGuide AI] 🟡 Mock mode — set USE_REAL_DATA=true to use live data');
+    // Use Nigeria data for Lagos/Nigeria locations, Montgomery data otherwise
+    if (isNigeria) {
+      const nigeriaMockData = await getNigeriaDisasterData(lat, lng, disasterType);
+      return { ...nigeriaMockData, dataSource: 'mock-nigeria' };
+    }
     return { ...getMockDisasterData(lat, lng, disasterType), dataSource: 'mock' };
   }
   try {
@@ -18,6 +24,10 @@ export async function getDisasterData(lat, lng, disasterType, location) {
     return data;
   } catch (err) {
     console.warn('[SwiftGuide AI] ❌ Real data failed, falling back:', err.message);
+    if (isNigeria) {
+      const nigeriaMockData = await getNigeriaDisasterData(lat, lng, disasterType);
+      return { ...nigeriaMockData, dataSource: 'mock-nigeria' };
+    }
     return { ...getMockDisasterData(lat, lng, disasterType), dataSource: 'mock' };
   }
 }
