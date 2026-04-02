@@ -650,6 +650,25 @@ export default function App() {
     console.log('[SwiftGuide AI] 📍 Demo location: Montgomery, AL');
   };
 
+  const geocodeLocation = async (text) => {
+    const encoded = encodeURIComponent(text);
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encoded}`;
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'SwiftrouteAI/1.0 (your-email@example.com)' },
+    });
+    if (!response.ok) {
+      throw new Error('Geocoding failed');
+    }
+    const results = await response.json();
+    if (!results || !results.length) {
+      throw new Error('Location not found');
+    }
+    return {
+      lat: parseFloat(results[0].lat),
+      lng: parseFloat(results[0].lon),
+    };
+  };
+
   const handleSubmit = async () => {
     if (!location || !disasterType) {
       setError('Please enter location and select emergency type');
@@ -659,10 +678,19 @@ export default function App() {
     setScreen('loading');
 
     try {
+      let requestLat = lat;
+      let requestLng = lng;
+      if (!location.toLowerCase().includes('montgomery')) {
+        const geocode = await geocodeLocation(location);
+        requestLat = geocode.lat;
+        requestLng = geocode.lng;
+        setLat(requestLat);
+        setLng(requestLng);
+      }
       const res = await fetch(`${API_BASE}/api/generate-route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lat, lng, disasterType, location }),
+        body: JSON.stringify({ lat: requestLat, lng: requestLng, disasterType, location }),
       });
 
       if (!res.ok) {
